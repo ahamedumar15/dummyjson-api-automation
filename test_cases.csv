@@ -1,0 +1,229 @@
+Test Case ID,Module,Title,Priority,Type,Preconditions,Test Data,Test Steps,Expected Result
+TC_PROD_001,Products,Get All Products,High,Functional,API is accessible,Endpoint: /products,"1. Send GET request to /products
+2. Verify response status code
+3. Validate response structure","1. Status code should be 200
+2. Response should contain 'products' array
+3. Response should contain 'total' and 'limit' fields
+4. Products array should not be empty"
+TC_PROD_002,Products,Get Single Product by Valid ID,High,Functional,API is accessible,Endpoint: /products/1,"1. Send GET request to /products/1
+2. Verify response status code
+3. Validate product data","1. Status code should be 200
+2. Response should contain product with id=1
+3. Response should have 'title', 'price', 'category' fields"
+TC_PROD_003,Products,Search Products by Keyword,Medium,Functional,API is accessible,"Endpoint: /products/search?q=phone
+Search query: phone","1. Send GET request to /products/search?q=phone
+2. Verify response status code
+3. Check search results
+","1. Status code should be 200
+2. Response should contain 'products' array
+3. Product titles should contain search keyword"
+TC_PROD_004,Products,Get Products with Pagination,Medium,Functional,API is accessible,"Endpoint: /products?limit=10&skip=5
+Limit: 10, Skip: 5","1. Send GET request with limit=10 and skip=5
+2. Verify response status code
+3. Validate pagination parameters","1. Status code should be 200
+2. Response should have limit=10
+3. Response should have skip=5
+4. Products array length should be ≤10"
+TC_PROD_005,Products,Get Product Categories,Medium,Functional,API is accessible,Endpoint: /products/categories,"1. Send GET request to /products/categories
+2. Verify response status code
+3. Validate categories list","1. Status code should be 200
+2. Response should be an array
+3. Array should contain category names"
+TC_PROD_006,Products,Filter Products by Category,High,Functional,API is accessible,"Endpoint: /products/category/smartphones
+Category: smartphones","1. Send GET request to /products/category/smartphones
+2. Verify response status code
+3. Validate filtered products","1. Status code should be 200
+2. Response should contain 'products' array
+3. All products should have category='smartphones'"
+TC_PROD_007,Products,Add New Product,High,Functional,API is accessible,"Endpoint: /products/add
+Body: {""title"":""Test Product"",""price"":999,""category"":""test""}","1. Send POST request to /products/add with product data
+2. Verify response status code
+3. Validate created product","1. Status code should be 201
+2. Response should contain the product with generated id
+3. Product title should match input
+4. Product price should match input"
+TC_PROD_008,Products,Update Existing Product,High,Functional,API is accessible,"Endpoint: /products/1
+Body: {""title"":""Updated Title""}","1. Send PUT request to /products/1 with update data
+2. Verify response status code
+3. Validate updated product","1. Status code should be 200
+2. Product title should be updated
+3. Product id should remain 1"
+TC_PROD_009,Products,Delete Product,Medium,Functional,API is accessible,Endpoint: /products/1,"1. Send DELETE request to /products/1
+2. Verify response status code
+3. Validate deletion response","1. Status code should be 200
+2. Response should contain 'isDeleted':true
+3. Response should contain deleted product id"
+TC_PROD_010,Products,Get Product with Invalid ID,High,Negative,API is accessible,Endpoint: /products/9999,"1. Send GET request to /products/9999
+2. Verify response status code
+3. Check error message","1. Status code should be 404
+2. Response should contain error message"
+TC_USER_001,Users,Get All Users,High,Functional,API is accessible,Endpoint: /users,"1. Send GET request to /users
+2. Verify response status code
+3. Validate response structure","1. Status code should be 200
+2. Response should contain 'users' array
+3. Users array should not be empty
+4. Each user should have 'id', 'username', 'email' fields"
+TC_USER_002,Users,Get Single User by Valid ID,High,Functional,API is accessible,Endpoint: /users/1,"1. Send GET request to /users/1
+2. Verify response status code
+3. Validate user data","1. Status code should be 200
+2. Response should contain user with id=1
+3. User should have 'username', 'email', 'firstName', 'lastName' fields"
+TC_USER_003,Users,Search Users by Keyword,Medium,Functional,API is accessible,"Endpoint: /users/search?q=john
+Search query: john","1. Send GET request to /users/search?q=john
+2. Verify response status code
+3. Validate search results","1. Status code should be 200
+2. Response should contain 'users' array
+3. Search results should be relevant to query"
+TC_USER_004,Users,Filter Users by Attribute,Medium,Functional,API is accessible,"Endpoint: /users/filter?key=hair.color&value=Brown
+Filter: hair.color=Brown","1. Send GET request with filter parameters
+2. Verify response status code
+3. Validate filtered users","1. Status code should be 200
+2. Response should contain 'users' array
+3. Filtered results should match criteria"
+TC_USER_005,Users,Get User with Invalid ID,High,Negative,API is accessible,Endpoint: /users/9999,"1. Send GET request to /users/9999
+2. Verify response status code
+3. Check error response","1. Status code should be 404
+2. Response should contain error message"
+TC_AUTH_001,Authentication,User Login with Valid Credentials,Critical,Functional,API is accessible,"Endpoint: /auth/login
+Body: {""username"":""emilys"",""password"":""emilyspass""}","1. Send POST request to /auth/login with valid credentials
+2. Verify response status code
+3. Validate authentication tokens","1. Status code should be 200
+2. Response should contain 'accessToken'
+3. Response should contain 'refreshToken'
+4. Response should contain user details (id, username)"
+TC_AUTH_002,Authentication,User Login with Invalid Credentials,Critical,Negative,API is accessible,"Endpoint: /auth/login
+Body: {""username"":""invalid"",""password"":""wrong""}","1. Send POST request to /auth/login with invalid credentials
+2. Verify response status code
+3. Check error message","1. Status code should be 400
+2. Response should contain error message
+3. No tokens should be returned"
+TC_AUTH_003,Authentication,Get Current Authenticated User,High,Functional,User is logged in with valid token,"Endpoint: /auth/me
+Header: Authorization: Bearer {token}","1. Login to get access token
+2. Send GET request to /auth/me with token in header
+3. Verify response status code
+4. Validate user data","1. Status code should be 200
+2. Response should contain authenticated user details
+3. Username should match logged-in user"
+TC_AUTH_004,Authentication,Refresh Authentication Token,High,Functional,User has valid refresh token,"Endpoint: /auth/refresh
+Body: {""refreshToken"":""{token}""}","1. Login to get refresh token
+2. Send POST request to /auth/refresh with refresh token
+3. Verify response status code
+4. Validate new tokens","1. Status code should be 200
+2. Response should contain new 'accessToken'
+3. Response should contain new 'refreshToken'"
+TC_CART_001,Carts,Get All Carts,High,Functional,API is accessible,Endpoint: /carts,"1. Send GET request to /carts
+2. Verify response status code
+3. Validate response structure","1. Status code should be 200
+2. Response should contain 'carts' array
+3. Each cart should have 'id', 'products', 'total', 'userId'"
+TC_CART_002,Carts,Get Single Cart by ID,High,Functional,API is accessible,Endpoint: /carts/1,"1. Send GET request to /carts/1
+2. Verify response status code
+3. Validate cart data","1. Status code should be 200
+2. Response should contain cart with id=1
+3. Cart should have 'products' array
+4. Cart should have 'total' and 'userId' fields"
+TC_CART_003,Carts,Get User Specific Carts,Medium,Functional,API is accessible,Endpoint: /carts/user/1,"1. Send GET request to /carts/user/1
+2. Verify response status code
+3. Validate user carts","1. Status code should be 200
+2. Response should contain 'carts' array
+3. All carts should belong to userId=1"
+TC_CART_004,Carts,Add New Cart,High,Functional,API is accessible,"Endpoint: /carts/add
+Body: {""userId"":1,""products"":[{""id"":1,""quantity"":2}]}","1. Send POST request to /carts/add with cart data
+2. Verify response status code
+3. Validate created cart","1. Status code should be 201
+2. Response should contain cart with generated id
+3. Cart should have correct userId and products"
+TC_POST_001,Posts,Get All Posts,High,Functional,API is accessible,Endpoint: /posts,"1. Send GET request to /posts
+2. Verify response status code
+3. Validate response structure","1. Status code should be 200
+2. Response should contain 'posts' array
+3. Each post should have 'id', 'title', 'body', 'userId'"
+TC_POST_002,Posts,Get Single Post by ID,High,Functional,API is accessible,Endpoint: /posts/1,"1. Send GET request to /posts/1
+2. Verify response status code
+3. Validate post data","1. Status code should be 200
+2. Response should contain post with id=1
+3. Post should have 'title', 'body', 'userId' fields"
+TC_POST_003,Posts,Get Posts by User ID,Medium,Functional,API is accessible,Endpoint: /posts/user/1,"1. Send GET request to /posts/user/1
+2. Verify response status code
+3. Validate user posts","1. Status code should be 200
+2. Response should contain 'posts' array
+3. All posts should have userId=1"
+TC_POST_004,Posts,Add New Post,High,Functional,API is accessible,"Endpoint: /posts/add
+Body: {""title"":""Test"",""body"":""Content"",""userId"":1}","1. Send POST request to /posts/add with post data
+2. Verify response status code
+3. Validate created post","1. Status code should be 201
+2. Response should contain post with generated id
+3. Post title and body should match input"
+TC_COMM_001,Comments,Get All Comments,Medium,Functional,API is accessible,Endpoint: /comments,"1. Send GET request to /comments
+2. Verify response status code
+3. Validate response structure","1. Status code should be 200
+2. Response should contain 'comments' array
+3. Each comment should have 'id', 'body', 'postId', 'user'"
+TC_COMM_002,Comments,Get Comments by Post ID,Medium,Functional,API is accessible,Endpoint: /comments/post/1,"1. Send GET request to /comments/post/1
+2. Verify response status code
+3. Validate post comments","1. Status code should be 200
+2. Response should contain 'comments' array
+3. All comments should have postId=1"
+TC_TODO_001,Todos,Get All Todos,Medium,Functional,API is accessible,Endpoint: /todos,"1. Send GET request to /todos
+2. Verify response status code
+3. Validate response structure","1. Status code should be 200
+2. Response should contain 'todos' array
+3. Each todo should have 'id', 'todo', 'completed', 'userId'"
+TC_TODO_002,Todos,Get Single Todo by ID,Medium,Functional,API is accessible,Endpoint: /todos/1,"1. Send GET request to /todos/1
+2. Verify response status code
+3. Validate todo data","1. Status code should be 200
+2. Response should contain todo with id=1
+3. Todo should have 'todo', 'completed' fields"
+TC_TODO_003,Todos,Add New Todo,Medium,Functional,API is accessible,"Endpoint: /todos/add
+Body: {""todo"":""Task"",""completed"":false,""userId"":1}","1. Send POST request to /todos/add with todo data
+2. Verify response status code
+3. Validate created todo","1. Status code should be 201
+2. Response should contain todo with generated id
+3. Todo text should match input"
+TC_QUOTE_001,Quotes,Get All Quotes,Low,Functional,API is accessible,Endpoint: /quotes,"1. Send GET request to /quotes
+2. Verify response status code
+3. Validate response structure","1. Status code should be 200
+2. Response should contain 'quotes' array
+3. Each quote should have 'id', 'quote', 'author'"
+TC_QUOTE_002,Quotes,Get Random Quote,Low,Functional,API is accessible,Endpoint: /quotes/random,"1. Send GET request to /quotes/random
+2. Verify response status code
+3. Validate quote data","1. Status code should be 200
+2. Response should contain single quote object
+3. Quote should have 'quote' and 'author' fields"
+TC_RECIPE_001,Recipes,Get All Recipes,Low,Functional,API is accessible,Endpoint: /recipes,"1. Send GET request to /recipes
+2. Verify response status code
+3. Validate response structure","1. Status code should be 200
+2. Response should contain 'recipes' array
+3. Each recipe should have 'id', 'name', 'ingredients'"
+TC_RECIPE_002,Recipes,Get Single Recipe by ID,Low,Functional,API is accessible,Endpoint: /recipes/1,"1. Send GET request to /recipes/1
+2. Verify response status code
+3. Validate recipe data","1. Status code should be 200
+2. Response should contain recipe with id=1
+3. Recipe should have 'name', 'ingredients' fields"
+TC_PERF_001,Performance,Products Endpoint Response Time,High,Performance,API is accessible,Endpoint: /products,"1. Send GET request to /products
+2. Measure response time
+3. Verify response time threshold","1. Status code should be 200
+2. Response time should be less than 2 seconds"
+TC_PERF_002,Performance,Users Endpoint Response Time,High,Performance,API is accessible,Endpoint: /users,"1. Send GET request to /users
+2. Measure response time
+3. Verify response time threshold","1. Status code should be 200
+2. Response time should be less than 2 seconds"
+TC_NEG_001,Negative Testing,Empty Search Query,Medium,Negative,API is accessible,Endpoint: /products/search?q=,"1. Send GET request with empty search query
+2. Verify response status code
+3. Validate response","1. Status code should be 200
+2. Response should handle empty query gracefully
+3. Response should contain 'products' array"
+TC_NEG_002,Negative Testing,Invalid Endpoint,Medium,Negative,API is accessible,Endpoint: /invalid/endpoint,"1. Send GET request to non-existent endpoint
+2. Verify response status code
+3. Check error message","1. Status code should be 404
+2. Response should indicate endpoint not found"
+TC_NEG_003,Negative Testing,Malformed JSON in POST Request,Medium,Negative,API is accessible,"Endpoint: /products/add
+Body: Invalid JSON","1. Send POST request with malformed JSON
+2. Verify response status code
+3. Check error handling","1. Status code should be 400 or 422
+2. Response should contain error message about invalid JSON"
+TC_NEG_004,Negative Testing,Missing Required Fields in POST,Medium,Negative,API is accessible,"Endpoint: /products/add
+Body: {}","1. Send POST request with empty body
+2. Verify response status code
+3. Validate error response","1. Status code should be 400 or 422
+2. Response should indicate missing required fields"
